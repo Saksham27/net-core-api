@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UserLogin.CL
+namespace EmployeeRepository.CL
 {
     public class Class1
     {

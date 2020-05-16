@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EmployeeRepository.RL
+namespace EmployeeData
 {
     public class Class1
     {

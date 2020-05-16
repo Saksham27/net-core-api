@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UserLogin.BL
+namespace EmployeeRepository.BL
 {
     public class Class1
     {
