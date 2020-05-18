@@ -9,7 +9,9 @@ using EmployeeRepository.Services;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using CommonLayer.Model;
-using IEmployeeDataBL.Interface;
+using BusinessLayer.Interface;
+using System.Data;
+using EmployeeRepository.CL.Model;
 
 namespace UserLogin.Api.Controllers
 {
@@ -17,35 +19,31 @@ namespace UserLogin.Api.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        EmployeeDataRL empObj = new EmployeeDataRL();
+        private IConfiguration configuration;
+        IEmployeeDataBL businessLayer;
+        ResponseMessage response;
 
-        
+
+        public EmployeeController(IEmployeeDataBL businessDI, IConfiguration config)
+        {
+            businessLayer = businessDI;
+            configuration = config;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<string>> GetEmployees()
         {
-            List<EmployeeModel> listEmp = new List<EmployeeModel>();
-            listEmp = empObj.GetAllEmployees().ToList();
-
-            return Ok(listEmp);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Register([FromBody] EmployeeModel model)
-        {
             try
             {
-                bool data = await empObj.Register(model);
-                if (!data.Equals(null))
+                response = businessLayer.GetAllEmployeeDetails();
+
+                if (response.Status == true)
                 {
-                    bool status = true;
-                    var message = "Registration Successful";
-                    return this.Ok(new { status, message });
+                    return Ok(new { response.Status, response.Message, response.ReturnData });
                 }
                 else
                 {
-                    bool status = false;
-                    var message = "Registration failed";
-                    return this.BadRequest(new { status, message });
+                    return BadRequest(new { response.Status, response.Message });
                 }
             }
             catch (Exception exception)
@@ -53,5 +51,132 @@ namespace UserLogin.Api.Controllers
                 return BadRequest(new { error = exception.Message });
             }
         }
+
+        [HttpGet("data={inputData}")]
+        public ActionResult GetEmployeeDetails(string inputData)
+        {
+            try
+            {
+                response = businessLayer.GetEmployeeDetails(inputData);
+                if (response.Status == true)
+                {
+                    return Ok(new { response.Status, response.Message, response.ReturnData });
+                }
+                else
+                {
+                    return BadRequest(new { response.Status, response.Message });
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(new { error = exception.Message });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult GetEmployeeDetailsWithId(EmployeeId id)
+        {
+            try
+            {
+                response = businessLayer.GetEmployeeDetailsWithId(id);
+                if (response.Status == true)
+                {
+                    return this.Ok(new { response.Status, response.Message, response.ReturnData });
+                }
+                else
+                {
+                    return BadRequest(new { response.Status, response.Message });
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(new { error = exception.Message });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Register([FromBody] EmployeeModel model)
+        {
+            try
+            {
+                response = businessLayer.RegisterEmployee(model);
+                if (response.Status == true)
+                {
+                    return this.Ok(new { response.Status, response.Message });
+                }
+                else
+                {
+                    return BadRequest(new { response.Status, response.Message });
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(new { error = exception.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(EmployeeId id)
+        {
+            try
+            {
+                response = businessLayer.DeleteEmployee(id);
+                if (response.Status == true)
+                {
+                    return this.Ok(new { response.Status, response.Message });
+                }
+                else
+                {
+                    return BadRequest(new { response.Status, response.Message });
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(new { error = exception.Message });
+            }
+        }
+
+        [HttpPost("{login}")]
+        public ActionResult Login(LoginModel loginData)
+        {
+            try
+            {
+                response = businessLayer.EmployeeLoginBL(loginData);
+                if (response.Status == true)
+                {
+                    return this.Ok(new { response.Status, response.Message });
+                }
+                else
+                {
+                    return BadRequest(new { response.Status, response.Message });
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(new { error = exception.Message });
+            }
+        }
+
+        [HttpPatch]
+        public ActionResult Update(UpdateModel data)
+        {
+            try
+            {
+                response = businessLayer.UpdateEmployeeDetails(data);
+                if(response.Status == true)
+                {
+                    return Ok(new { response.Status, response.Message });
+                }
+                else
+                {
+                    return BadRequest(new { response.Status, response.Message });
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(new { error = exception.Message });
+            }
+        }
+
     }
 }
