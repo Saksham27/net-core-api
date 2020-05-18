@@ -1,32 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="EmployeeModel.cs" company="BridgeLabz Solutions LLP">
+//     Copyright (c) Company. All rights reserved.
+// </copyright>
+// <author> Saksham Singh </author>
+//-----------------------------------------------------------------------
 namespace CommonLayer.Model
 {
-    [DataContract]
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
+    /// <summary>
+    /// POCO class for Employee
+    /// </summary>
     public class EmployeeModel
     {
-        [DataMember(Name = "EmployeeId")]
+        /// <summary>
+        /// Gets or sets Employee Id
+        /// </summary>
         public int EmployeeId { get; set; }
 
-        [DataMember(Name = "FirstName")]
+        /// <summary>
+        /// Gets or sets FirstName
+        /// </summary>
+        [Required(ErrorMessage = "FirstName Is Required")]
         public string FirstName { get; set; }
 
-        [DataMember(Name = "LastName")]
+        /// <summary>
+        /// Gets or sets LastName
+        /// </summary>
+        [Required(ErrorMessage = "LastName Is Required")]
         public string LastName { get; set; }
 
-        [DataMember(Name = "Email")]
+        /// <summary>
+        /// Gets or sets Email
+        /// </summary>
+        [Required(ErrorMessage = "Email Is Required")]
+        [EmailAddress]
         public string Email { get; set; }
 
-        [DataMember(Name = "UserName")]
+        /// <summary>
+        /// Gets or sets UserName
+        /// </summary>
+        [Required(ErrorMessage = "UserName Is Required")]
         public string UserName { get; set; }
 
-        [DataMember(Name = "Password")]
+        /// <summary>
+        /// Gets or sets Password
+        /// </summary>
+        [Required(ErrorMessage = "Password Is Required")]
+        [PasswordPropertyText]
         public string Password { get; set; }
 
-        [DataMember(Name = "City")]
+        /// <summary>
+        /// Gets or sets City
+        /// </summary>
         public string City { get; set; }
-    }
-}
+    } //// end : public class EmployeeModel
+} //// end : namespace CommonLayer.Model
