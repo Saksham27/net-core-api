@@ -7,15 +7,15 @@ using System.Text;
 namespace EmployeeRepository.CL.Model
 {
     [DataContract]
-    public class ResponseMessage<Type> 
+    public class ResponseMessage 
     {
         [DataMember(Name = "IsSuccess")]
-        public bool IsSuccess { get; set; }
+        public bool Status { get; set; }
 
         [DataMember(Name = "ReturnMessage")]
-        public string ReturnMessage { get; set; }
+        public string Message { get; set; }
 
         [DataMember(Name = "ReturnData")]
-        public EmployeeModel ReturnData { get; set; }
+        public List<EmployeeModel> ReturnData { get; set; } = null;
     }
 }
